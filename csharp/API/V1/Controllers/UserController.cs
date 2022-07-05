@@ -1,11 +1,11 @@
-using API.V2;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers.V2;
+namespace API.V1.Controllers;
 
 [ApiController]
-[Route("v2/user")]
+[Route( "[controller]" )]
+[Route( "v{version:apiVersion}/[controller]" )]
 public class UserController : ControllerBase
 {
 
@@ -15,10 +15,11 @@ public class UserController : ControllerBase
     {
         _logger = logger;
     }
-
-    [HttpGet(Name = "GetUsers")]
-    public IEnumerable<V2User> Get()
+    // GET ~/v1/user
+    // GET ~/user?api-version=1.0
+    [HttpGet]
+    public IEnumerable<V1User> Get()
     {
-        return new User[] { }.Select(V2Mapper.Map).ToArray();
+        return  new User[] { }.Select(V1Mapper.Map).ToArray();
     }
 }
