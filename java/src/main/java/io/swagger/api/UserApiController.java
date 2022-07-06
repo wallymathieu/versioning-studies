@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.model.V1User;
 import io.swagger.model.V2User;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -36,17 +37,29 @@ public class UserApiController implements UserApi {
     }
 
     public ResponseEntity<List<V2User>> userGet(@Parameter(in = ParameterIn.QUERY, description = "The requested API version" ,schema=@Schema( defaultValue="2.0")) @Valid @RequestParam(value = "api-version", required = false, defaultValue="2.0") String apiVersion) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<List<V2User>>(objectMapper.readValue("[ {\n  \"roles\" : [ 0, 0 ],\n  \"name\" : {\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\"\n  },\n  \"userUri\" : \"http://example.com/aeiou\",\n  \"isActive\" : true,\n  \"email\" : \"email\"\n}, {\n  \"roles\" : [ 0, 0 ],\n  \"name\" : {\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\"\n  },\n  \"userUri\" : \"http://example.com/aeiou\",\n  \"isActive\" : true,\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<V2User>>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            return new ResponseEntity<List<V2User>>(objectMapper.readValue("[ {\n  \"roles\" : [ 0, 0 ],\n  \"name\" : {\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\"\n  },\n  \"userUri\" : \"http://example.com/aeiou\",\n  \"isActive\" : true,\n  \"email\" : \"email\"\n}, {\n  \"roles\" : [ 0, 0 ],\n  \"name\" : {\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\"\n  },\n  \"userUri\" : \"http://example.com/aeiou\",\n  \"isActive\" : true,\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return new ResponseEntity<List<V2User>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<List<V2User>>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    public ResponseEntity<List<V1User>> v1UserGet() {
+        //String accept = request.getHeader("Accept");
+        try {
+            return new ResponseEntity<List<V1User>>(objectMapper.readValue("[ {\n  \"roles\" : [ \"roles\", \"roles\" ],\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"isActive\" : true,\n  \"email\" : \"email\"\n}, {\n  \"roles\" : [ \"roles\", \"roles\" ],\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"isActive\" : true,\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return new ResponseEntity<List<V1User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    public ResponseEntity<List<V2User>> v2UserGet() {
+        try {
+            return new ResponseEntity<List<V2User>>(objectMapper.readValue("[ {\n  \"roles\" : [ 0, 0 ],\n  \"name\" : {\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\"\n  },\n  \"userUri\" : \"http://example.com/aeiou\",\n  \"isActive\" : true,\n  \"email\" : \"email\"\n}, {\n  \"roles\" : [ 0, 0 ],\n  \"name\" : {\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\"\n  },\n  \"userUri\" : \"http://example.com/aeiou\",\n  \"isActive\" : true,\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return new ResponseEntity<List<V2User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

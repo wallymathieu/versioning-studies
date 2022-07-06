@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.swagger.model.V1User;
 import io.swagger.model.V2User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,11 +31,41 @@ public interface UserApi {
 
     @Operation(summary = "", description = "Get users", tags={ "User" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = V2User.class)))) })
-    @RequestMapping(value = "/User",
+        @ApiResponse(responseCode = "200", description = "Success", 
+                     content = @Content(
+                                    mediaType = "application/json", 
+                                    array = @ArraySchema(schema = @Schema(implementation = V2User.class)))) })
+    @RequestMapping(value = "/user",
         produces = { "application/json", "text/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<V2User>> userGet(@Parameter(in = ParameterIn.QUERY, description = "The requested API version" ,schema=@Schema( defaultValue="2.0")) @Valid @RequestParam(value = "api-version", required = false, defaultValue="2.0") String apiVersion);
+    ResponseEntity<List<V2User>> userGet(
+        @Parameter(in = ParameterIn.QUERY, description = "The requested API version" ,schema=@Schema( defaultValue="2.0")) 
+        @Valid
+        @RequestParam(value = "api-version", required = false, defaultValue="2.0") 
+        String apiVersion);
 
+
+    @Operation(summary = "", description = "Get users", tags={ "User" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Success", 
+            content = @Content(mediaType = "application/json", 
+                               array = @ArraySchema(schema = @Schema(implementation = V1User.class)))) })
+    @RequestMapping(value="/v1/user",
+        method = RequestMethod.GET,
+        produces = {"application/json"},
+        consumes = {"application/json"})
+    ResponseEntity<List<V1User>> v1UserGet();
+
+
+    @Operation(summary = "", description = "Get users", tags={ "User" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Success", 
+            content = @Content(mediaType = "application/json", 
+                               array = @ArraySchema(schema = @Schema(implementation = V2User.class)))) })
+    @RequestMapping(value="/v2/user",
+        method = RequestMethod.GET,
+        produces = {"application/json"},
+        consumes = {"application/json"})
+    ResponseEntity<List<V2User>> v2UserGet();
 }
 
