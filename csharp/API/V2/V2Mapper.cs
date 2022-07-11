@@ -21,9 +21,9 @@ public class V2Mapper: IMapper<User,V2User>
     {
         switch (arg)
         {
-            case UserRole.Administrator: return V2UserRole.Administrator;
-            case UserRole.Support: return V2UserRole.Support;
-            case UserRole.Normal: return V2UserRole.Normal;
+            case UserRole.Administrator: return V2UserRole.ADM;
+            case UserRole.Support: return V2UserRole.SUP;
+            case UserRole.Normal: return V2UserRole.USR;
             default: throw new Exception(arg.ToString());
         }
     }

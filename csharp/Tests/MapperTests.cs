@@ -5,7 +5,7 @@ using Domain;
 
 namespace Tests;
 
-public class UnitTest1
+public class MapperTests
 {
     [Theory,AutoData]
     public void Can_map_from_user_to_api_version_1(User user)
