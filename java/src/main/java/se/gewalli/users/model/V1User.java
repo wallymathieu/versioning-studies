@@ -1,4 +1,4 @@
-package io.swagger.model;
+package se.gewalli.users.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * V1User
  */
 @Validated
-public class V1User   {
+public class V1User extends BaseUser {
   @JsonProperty("id")
   private Integer id = null;
 

@@ -1,4 +1,4 @@
-package io.swagger.configuration;
+package se.gewalli.users.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class SwaggerDocumentationConfig {
     public Docket customImplementation(){
         return new Docket(DocumentationType.OAS_30)
                 .select()
-                    .apis(RequestHandlerSelectors.basePackage("io.swagger.api"))
+                    .apis(RequestHandlerSelectors.basePackage("se.gewalli.users.api"))
                     .build()
                 .directModelSubstitute(org.threeten.bp.LocalDate.class, java.sql.Date.class)
                 .directModelSubstitute(org.threeten.bp.OffsetDateTime.class, java.util.Date.class)

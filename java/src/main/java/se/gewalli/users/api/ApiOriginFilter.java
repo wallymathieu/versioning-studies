@@ -1,4 +1,4 @@
-package io.swagger.api;
+package se.gewalli.users.api;
 
 import java.io.IOException;
 

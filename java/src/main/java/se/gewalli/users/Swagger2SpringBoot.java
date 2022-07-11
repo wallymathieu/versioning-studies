@@ -1,7 +1,7 @@
-package io.swagger;
+package se.gewalli.users;
 
-import io.swagger.configuration.LocalDateConverter;
-import io.swagger.configuration.LocalDateTimeConverter;
+import se.gewalli.users.configuration.LocalDateConverter;
+import se.gewalli.users.configuration.LocalDateTimeConverter;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @SpringBootApplication
 @EnableOpenApi
-@ComponentScan(basePackages = { "io.swagger", "io.swagger.api" , "io.swagger.configuration"})
+@ComponentScan(basePackages = { "se.gewalli.users", "se.gewalli.users.api" , "se.gewalli.users.configuration"})
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override

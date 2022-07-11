@@ -1,4 +1,4 @@
-package io.swagger.model;
+package se.gewalli.users.model;
 
 import java.util.Objects;
 

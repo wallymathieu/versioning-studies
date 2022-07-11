@@ -1,4 +1,4 @@
-package io.swagger.model;
+package se.gewalli.users.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets V2UserRole
  */
 public enum V2UserRole {
-  NUMBER_0(0),
-    NUMBER_1(1),
-    NUMBER_2(2);
+  Normal(0),
+  Support(1),
+  Administrator(2);
 
   private Integer value;
 
