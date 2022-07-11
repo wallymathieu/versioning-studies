@@ -20,9 +20,9 @@ public class AppConfig {
             public Collection<User> getUsers() {
                 return Arrays.asList(
                         new User(new UserId(1),"myUser","Password","email@email.se",true,"Firstname","Lastname","Firstname Lastname",
-                            Arrays.asList(UserRole.Normal)),
+                            Arrays.asList(UserRole.NORMAL)),
                         new User(new UserId(2),"support","Password2","email2@email.se",true,"Firstname","Lastname","Firstname Lastname",
-                            Arrays.asList(UserRole.Support)));
+                            Arrays.asList(UserRole.SUPPORT)));
             }
         };
     }

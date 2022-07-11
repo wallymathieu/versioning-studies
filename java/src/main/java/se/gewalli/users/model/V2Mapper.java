@@ -19,9 +19,9 @@ public class V2Mapper {
     {
         switch (arg)
         {
-            case Administrator: return V2UserRole.Administrator;
-            case Support: return V2UserRole.Support;
-            case Normal: return V2UserRole.Normal;
+            case ADMINISTRATOR: return V2UserRole.ADM;
+            case SUPPORT: return V2UserRole.SUP;
+            case NORMAL: return V2UserRole.USR;
             default: throw new RuntimeException(arg.toString());
         }
     }

@@ -68,8 +68,7 @@ public interface UserApi {
                                array = @ArraySchema(schema = @Schema(implementation = V1User.class)))) })
     @RequestMapping(value="/v1/user",
         method = RequestMethod.GET,
-        produces = {"application/json"},
-        consumes = {"application/json"})
+        produces = {"application/json"})
     ResponseEntity<List<V1User>> v1UserGet();
 
 
@@ -80,8 +79,7 @@ public interface UserApi {
                                array = @ArraySchema(schema = @Schema(implementation = V2User.class)))) })
     @RequestMapping(value="/v2/user",
         method = RequestMethod.GET,
-        produces = {"application/json"},
-        consumes = {"application/json"})
+        produces = {"application/json"})
     ResponseEntity<List<V2User>> v2UserGet();
 }
 

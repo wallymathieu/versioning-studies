@@ -20,9 +20,9 @@ public class V1Mapper {
     {
         switch (arg)
         {
-            case Administrator: return "A";
-            case Normal: return "N";
-            case Support: return "S";
+            case ADMINISTRATOR: return "A";
+            case NORMAL: return "N";
+            case SUPPORT: return "S";
             default: throw new RuntimeException(arg.toString());
         }
     }
