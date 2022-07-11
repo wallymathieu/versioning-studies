@@ -78,6 +78,19 @@ public class ContractTests :IDisposable
         var stringResult = await result.Content.ReadAsStringAsync();
         AssertV2Data(stringResult);
     }
+    [Fact]
+    public async Task GetAllUsersInvalidVersion()
+    {
+        var result = await _adapter.CreateClient().GetAsync("/User?api-version=10.0");
+        result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var stringResult = await result.Content.ReadAsStringAsync();
+        JToken.Parse(stringResult).Should().BeEquivalentTo(JToken.Parse(@"{
+""error"":{
+    ""code"":""UnsupportedApiVersion"",
+    ""message"":""The HTTP resource that matches the request URI 'http://localhost/User' does not support the API version '10.0'."",
+    ""innerError"":null
+}}"));
+    }
 
     public void Dispose()
     {
