@@ -1,6 +1,5 @@
 module Tests
 
-open System
 open Xunit
 open Core.Domain
 open Core.JSON
@@ -9,12 +8,12 @@ open Newtonsoft.Json.Linq
 let assertJsonEqual expected actual =
     (JToken.Parse expected).Should().BeEquivalentTo(JToken.Parse actual, null)
 let user1={
-    Id=UserId 1;Login="user"; Password="psw";Email="email@email.se";IsActive=true
-    FirstName="Firstname";LastName="Lastname";Roles=[Normal]
+    Id=UserId 1;Login="user"; Password="psw";Data={Email="email@email.se";IsActive=true
+                                                   FirstName="Firstname";LastName="Lastname";Roles=[Normal]}
 }
 let user2={
-    Id=UserId 2;Login="support"; Password="psw";Email="email2@email.se";IsActive=true
-    FirstName="Firstname";LastName="Lastname";Roles=[Support]
+    Id=UserId 2;Login="support"; Password="psw";Data={Email="email2@email.se";IsActive=true
+                                                      FirstName="Firstname";LastName="Lastname";Roles=[Support]}
 }
 let users= [user1;user2]
 
@@ -27,7 +26,7 @@ let ``v1 format``() =
   "isActive": true,
   "roles": ["N"]}
 """
-    assertJsonEqual expected (string (userToJson V1 user1))
+    assertJsonEqual expected (string (User.toJson V1 user1))
 [<Fact>]
 let ``v2 format``() =
     let expected = """{
@@ -40,4 +39,11 @@ let ``v2 format``() =
   "isActive": true,
   "roles": ["USR"]}
 """
-    assertJsonEqual expected (string (userToJson V2 user1))
+    assertJsonEqual expected (string (User.toJson V2 user1))
+// Nice versioned spec: 
+// https://github.com/abailly/sensei/blob/master/src/Sensei/User.hs#L119-L164
+// https://github.com/abailly/sensei/blob/master/src/Sensei/Version.hs#L55
+// https://github.com/abailly/sensei/blob/master/test/Sensei/UserSpec.hs#L29
+
+// DataVersion:   
+// https://github.com/agentultra/DataVersion/blob/master/test/Spec.hs
