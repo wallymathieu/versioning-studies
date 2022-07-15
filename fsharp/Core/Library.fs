@@ -55,20 +55,16 @@ module JSON =
         
         let v1C :Codec<E,_> = tryParseDecodedString parseV1 <-> (toV1 >> JString)
         let v2C :Codec<E,_> = tryParseDecodedString parseV2 <-> (toV2 >> JString)
-        
-        let toV version (role:UserRole)=
-            match version with
-            | V1 -> toV1 role
-            | V2 -> toV2 role
-    
-    module User=
-        let cV2Name :Codec<E,string * string> =
+        let vC version= match version with | V2 -> v2C | V1 -> v1C
+
+    module Name =
+        let v2C :Codec<E,string * string> =
             codec {
                 let! firstname = jreq "firstname" (Some<<fst)
                 and! lastname  = jreq "lastname"  (Some<<snd)
                 return (firstname,lastname)
             } |> ofObjCodec
-        let cV1Name:Codec<E,string * string> =
+        let v1C:Codec<E,string * string> =
             let ofJson =
                 function | JString v as jv -> match String.split [" "] v |> Seq.toList with
                                               | [ f;l] -> Decode.Success (f,l)
@@ -76,11 +72,14 @@ module JSON =
                          | x               -> Decode.Fail.strExpected  x
             let toJson (f,l)= JString $"%s{f} %s{l}" 
             ofJson <-> toJson
+        let vC version = match version with | V2 -> v2C | V1 -> v1C
 
+    module User=
+        
         let cV version =
             codec {
-                let nameC = match version with | V2 -> cV2Name | V1 -> cV1Name
-                let roleC = match version with | V2 -> UserRole.v2C | V1 -> UserRole.v1C
+                let nameC = Name.vC version
+                let roleC = UserRole.vC version
                 
                 let! firstname,lastname = jreqWith nameC "name" (fun (x:UserData) -> Some (x.FirstName,x.LastName))
                 and! email    = jreq "email"      (fun x -> Some x.Email)
