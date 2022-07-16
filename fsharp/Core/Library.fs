@@ -44,57 +44,72 @@ module JSON =
                  | x               -> Decode.Fail.strExpected  x
     /// type alias in order to shorten type parameter
     type E = Encoding
-
-    module UserRole=
-        let data = [Normal,("N","USR"); Support,("S","SUP"); Administrator,("A","ADM")]
-        let parseV1 v =data |> List.tryFind (snd>> fst >> (=) v ) |> Option.map fst
-        let formats v =data |> List.find (fst >> (=) v ) |> snd
-        let toV1 v =formats v |> fst
-        let parseV2 v = data |> List.tryFind (snd>> snd >> (=) v ) |> Option.map fst
-        let toV2 v =formats v |> snd
-        
-        let v1C :Codec<E,_> = tryParseDecodedString parseV1 <-> (toV1 >> JString)
-        let v2C :Codec<E,_> = tryParseDecodedString parseV2 <-> (toV2 >> JString)
-        let vC version= match version with | V2 -> v2C | V1 -> v1C
-
-    module Name =
-        let v2C :Codec<E,string * string> =
-            codec {
-                let! firstname = jreq "firstname" (Some<<fst)
-                and! lastname  = jreq "lastname"  (Some<<snd)
-                return (firstname,lastname)
-            } |> ofObjCodec
-        let v1C:Codec<E,string * string> =
+    module V1=
+        module UserRole=
+            let data = [Normal,"N"; Support,"S"; Administrator,"A"]
+            let tryParse v = data |> List.tryFind ( snd >> (=) v ) |> Option.map fst
+            let toString v = data |> List.find ( fst >> (=) v ) |> snd
+            
+            let codec :Codec<E,_> = tryParseDecodedString tryParse <-> (toString >> JString)
+        module Name=
             let ofJson =
                 function | JString v as jv -> match String.split [" "] v |> Seq.toList with
                                               | [ f;l] -> Decode.Success (f,l)
                                               | _ -> Decode.Fail.invalidValue jv ("Could not interpret name: " + v)
                          | x               -> Decode.Fail.strExpected  x
             let toJson (f,l)= JString $"%s{f} %s{l}" 
-            ofJson <-> toJson
-        let vC version = match version with | V2 -> v2C | V1 -> v1C
-
-    module User=
-        
-        let cV version =
-            codec {
-                let nameC = Name.vC version
-                let roleC = UserRole.vC version
-                
-                let! firstname,lastname = jreqWith nameC "name" (fun (x:UserData) -> Some (x.FirstName,x.LastName))
-                and! email    = jreq "email"      (fun x -> Some x.Email)
-                and! isActive = jreq "isActive"   (fun x -> Some x.IsActive)
-                and! roles = jreqWith (Codecs.list roleC) "roles" (fun x -> Some x.Roles)
-                return { Roles = roles; FirstName = firstname
-                         LastName=lastname; Email = email
-                         IsActive=isActive }
-            }
+            let codec:Codec<E,string * string> =
+                ofJson <-> toJson
+        module UserData=
+            let codec =
+                codec {
+                    let! firstname,lastname = jreqWith Name.codec "name" (fun (x:UserData) -> Some (x.FirstName,x.LastName))
+                    and! email    = jreq "email"      (fun x -> Some x.Email)
+                    and! isActive = jreq "isActive"   (fun x -> Some x.IsActive)
+                    and! roles = jreqWith (Codecs.list UserRole.codec) "roles" (fun x -> Some x.Roles)
+                    return { Roles = roles; FirstName = firstname
+                             LastName=lastname; Email = email
+                             IsActive=isActive }
+                }
+        module User=
+            let toJson (data:User)=
+                jobj (seq {
+                       yield "id" .= UserId.unwrap data.Id
+                       
+                       yield! (Codec.encode UserData.codec data.Data).Properties
+                       } |> Seq.toList)
+    module V2=
+        module UserRole=
+            let data = [Normal,"USR"; Support,"SUP"; Administrator,"ADM"]
+            let toString v =data |> List.find (fst >> (=) v ) |> snd
+            let tryParse v = data |> List.tryFind (snd >> (=) v ) |> Option.map fst
             
-        let toJson version (data:User)=
-            jobj (seq {
-                   if (version <= V1) then yield "id" .= UserId.unwrap data.Id
-                   if (version >= V2) then yield "userUri" .= "/user/" + Uri.EscapeDataString ( UserId.unwrap data.Id |> string )
-                   
-                   yield! (Codec.encode (cV version) data.Data).Properties
-                   } |> Seq.toList)
-      
+            let codec :Codec<E,_> = tryParseDecodedString tryParse <-> (toString >> JString)
+    
+        module Name =
+            let codec :Codec<E,string * string> =
+                codec {
+                    let! firstname = jreq "firstname" (Some<<fst)
+                    and! lastname  = jreq "lastname"  (Some<<snd)
+                    return (firstname,lastname)
+                } |> ofObjCodec
+        module UserData=
+            let codec =
+                codec {
+                    let! firstname,lastname = jreqWith Name.codec "name" (fun (x:UserData) -> Some (x.FirstName,x.LastName))
+                    and! email    = jreq "email"      (fun x -> Some x.Email)
+                    and! isActive = jreq "isActive"   (fun x -> Some x.IsActive)
+                    and! roles = jreqWith (Codecs.list UserRole.codec) "roles" (fun x -> Some x.Roles)
+                    return { Roles = roles; FirstName = firstname
+                             LastName=lastname; Email = email
+                             IsActive=isActive }
+                }
+
+        module User=
+            let toJson (data:User)=
+                jobj (seq {
+                       yield "userUri" .= "/user/" + Uri.EscapeDataString ( UserId.unwrap data.Id |> string )
+                       
+                       yield! (Codec.encode UserData.codec data.Data).Properties
+                       } |> Seq.toList)
+
