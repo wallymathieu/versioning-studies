@@ -8,19 +8,16 @@ module Domain =
         static member unwrap (UserId id) = id
     type UserRole = | Normal | Support | Administrator
     type UserData = {
-        Email:string
-        IsActive:bool
-        FirstName:string
-        LastName:string
-        Roles: UserRole list
-    }
+        Email:      string
+        IsActive:   bool
+        FirstName:  string
+        LastName:   string
+        Roles:      UserRole list }
     type User = {
-        Id:UserId
-        Login:string
-        Password:string
-        Data: UserData }
-    with
-        member this.Name= $"%s{this.Data.FirstName} %s{this.Data.LastName}"
+        Id:         UserId
+        Login:      string
+        Password:   string
+        Data:       UserData }
 
 module JSON =
     open Domain
@@ -34,15 +31,13 @@ module JSON =
                                       | Some v' -> Decode.Success v'
                                       | _ -> Decode.Fail.invalidValue jv ("Wrong case: " + v)
                  | x               -> Decode.Fail.strExpected  x
-    /// type alias in order to shorten type parameter
-    type E = Encoding
     module V1=
         module UserRole=
             let data = [Normal,"N"; Support,"S"; Administrator,"A"]
             let tryParse v = data |> List.tryFind ( snd >> (=) v ) |> Option.map fst
             let toString v = data |> List.find ( fst >> (=) v ) |> snd
             
-            let codec :Codec<E,_> = tryParseDecodedString tryParse <-> (toString >> JString)
+            let codec :Codec<Encoding,_> = tryParseDecodedString tryParse <-> (toString >> JString)
         module Name=
             let ofJson =
                 function | JString v as jv -> match String.split [" "] v |> Seq.toList with
@@ -50,7 +45,7 @@ module JSON =
                                               | _ -> Decode.Fail.invalidValue jv ("Could not interpret name: " + v)
                          | x               -> Decode.Fail.strExpected  x
             let toJson (f,l)= JString $"%s{f} %s{l}" 
-            let codec:Codec<E,string * string> =
+            let codec:Codec<Encoding,string * string> =
                 ofJson <-> toJson
         module UserData=
             let codec =
@@ -61,8 +56,7 @@ module JSON =
                     and! roles = jreqWith (Codecs.list UserRole.codec) "roles" (fun x -> Some x.Roles)
                     return { Roles = roles; FirstName = firstname
                              LastName=lastname; Email = email
-                             IsActive=isActive }
-                }
+                             IsActive=isActive } }
         module User=
             let toJson (data:User)=
                 jobj (seq {
@@ -76,10 +70,10 @@ module JSON =
             let toString v =data |> List.find (fst >> (=) v ) |> snd
             let tryParse v = data |> List.tryFind (snd >> (=) v ) |> Option.map fst
             
-            let codec :Codec<E,_> = tryParseDecodedString tryParse <-> (toString >> JString)
+            let codec :Codec<Encoding,_> = tryParseDecodedString tryParse <-> (toString >> JString)
     
         module Name =
-            let codec :Codec<E,string * string> =
+            let codec :Codec<Encoding,string * string> =
                 codec {
                     let! firstname = jreq "firstname" (Some<<fst)
                     and! lastname  = jreq "lastname"  (Some<<snd)
@@ -94,8 +88,7 @@ module JSON =
                     and! roles = jreqWith (Codecs.list UserRole.codec) "roles" (fun x -> Some x.Roles)
                     return { Roles = roles; FirstName = firstname
                              LastName=lastname; Email = email
-                             IsActive=isActive }
-                }
+                             IsActive=isActive } }
 
         module User=
             let toJson (data:User)=
