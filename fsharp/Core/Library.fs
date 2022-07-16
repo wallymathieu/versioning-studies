@@ -20,12 +20,7 @@ module Domain =
         Password:string
         Data: UserData }
     with
-        member this.Name= $"%s{this.FirstName} %s{this.LastName}"
-        member this.FirstName= this.Data.FirstName
-        member this.LastName= this.Data.LastName
-        member this.Email= this.Data.Email
-        member this.IsActive= this.Data.IsActive
-        member this.Roles= this.Data.Roles
+        member this.Name= $"%s{this.Data.FirstName} %s{this.Data.LastName}"
 
 module JSON =
     open Domain
@@ -33,9 +28,6 @@ module JSON =
     open Fleece.FSharpData
     open System
     type Version = | V1 | V2
-    type Versioned<'T> = { Version:Version; Data:'T }
-    with
-        member self.Map map= { Version=self.Version; Data = map self.Data }
     /// 
     let tryParseDecodedString tryParse=
         function | JString v as jv -> match tryParse v with
