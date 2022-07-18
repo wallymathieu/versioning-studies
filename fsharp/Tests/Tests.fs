@@ -27,10 +27,3 @@ let ``v2 format``() =
   "roles": ["USR"]}
 """
     assertJsonEqual expected (string (V2.User.toJson user1))
-// Nice versioned spec: 
-// https://github.com/abailly/sensei/blob/master/src/Sensei/User.hs#L119-L164
-// https://github.com/abailly/sensei/blob/master/src/Sensei/Version.hs#L55
-// https://github.com/abailly/sensei/blob/master/test/Sensei/UserSpec.hs#L29
-
-// DataVersion:   
-// https://github.com/agentultra/DataVersion/blob/master/test/Spec.hs
