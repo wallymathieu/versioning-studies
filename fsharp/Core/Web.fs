@@ -1,12 +1,10 @@
 module Wallymathieu.VersioningStudies.Web
-open System
 open FSharpPlus
 open Giraffe
 open Microsoft.AspNetCore.Http
-
 open FSharpPlus.Data
-open System.Text
 open Fleece
+
 open Wallymathieu.VersioningStudies.Giraffe.Json
 open Wallymathieu.VersioningStudies.Domain
 open Wallymathieu.VersioningStudies.JSON

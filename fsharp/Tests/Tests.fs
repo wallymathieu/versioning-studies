@@ -1,8 +1,8 @@
 module Wallymathieu.VersioningStudies.Tests
+open Xunit
+
 open Wallymathieu.VersioningStudies.Utils
 open Wallymathieu.VersioningStudies.JSON
-
-open Xunit
 
 [<Fact>]
 let ``v1 format``() =

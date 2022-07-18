@@ -1,12 +1,11 @@
 module Wallymathieu.VersioningStudies.Giraffe
-open Giraffe
-open Microsoft.AspNetCore.Http
-open FSharp.Control.Tasks.V2
 open System.IO
 open System.Text
+open Giraffe
+open Microsoft.AspNetCore.Http
+open Fleece.FSharpData
 
 module Json =
-  open Fleece.FSharpData
   let inline json (dataObj ) : HttpHandler =
     fun (_ : HttpFunc) (ctx : HttpContext) ->
         ctx.SetContentType "application/json; charset=utf-8"

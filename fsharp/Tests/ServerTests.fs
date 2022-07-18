@@ -1,13 +1,15 @@
 module Wallymathieu.VersioningStudies.ServerTests
-open Xunit
 open System
-open Microsoft.AspNetCore.Hosting
-open Domain
-open Utils
-open Microsoft.AspNetCore.Builder
-open Wallymathieu.VersioningStudies.App.Program
 open System.Net
+open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Builder
+
 open Microsoft.AspNetCore.TestHost
+open Xunit
+
+open Wallymathieu.VersioningStudies.Domain
+open Wallymathieu.VersioningStudies.Utils
+open Wallymathieu.VersioningStudies.App.Program
 
 let hardCodedRepository = { new IUserRepository with member this.GetUsers () = task { return users } }
 let server =

@@ -1,7 +1,8 @@
 module Wallymathieu.VersioningStudies.Utils
-open Wallymathieu.VersioningStudies.Domain
 open FluentAssertions.Json
 open Newtonsoft.Json.Linq
+
+open Wallymathieu.VersioningStudies.Domain
 
 let assertJsonEqual expected actual =
     let expectedToken = JToken.Parse expected
