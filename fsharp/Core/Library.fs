@@ -1,8 +1,9 @@
-﻿namespace Core
-
+﻿namespace Wallymathieu.VersioningStudies
+open System.Threading.Tasks
 open FSharpPlus
 
 module Domain =
+    
     type UserId = UserId of int32
     with
         static member unwrap (UserId id) = id
@@ -19,12 +20,15 @@ module Domain =
         Password:   string
         Data:       UserData }
 
+    type IUserRepository = interface 
+        abstract member GetUsers : unit -> Task<User list>
+    end
+
 module JSON =
     open Domain
     open Fleece
     open Fleece.FSharpData
     open System
-    type Version = | V1 | V2
     /// 
     let tryParseDecodedString tryParse=
         function | JString v as jv -> match tryParse v with
