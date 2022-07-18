@@ -24,5 +24,4 @@ module Json =
   let inline getBody (ctx : HttpContext) = task {
     use reader = new StreamReader(ctx.Request.Body)
     let! body = reader.ReadToEndAsync()
-    return try Ok (JsonValue.Parse body) with e -> Error <| string e
-  }
+    return try Ok (JsonValue.Parse body) with e -> Error <| string e }

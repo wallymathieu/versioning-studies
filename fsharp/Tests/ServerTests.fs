@@ -10,7 +10,6 @@ open System.Net
 open Microsoft.AspNetCore.TestHost
 
 let hardCodedRepository = { new IUserRepository with member this.GetUsers () = task { return users } }
-type Server = class end
 let server =
     let builder = 
         WebHostBuilder()
@@ -65,33 +64,32 @@ let v2UsersJson = """[
     ]
   }
 ]"""
+
 [<Fact>]
 let ``can query users endpoint``() = task {
     use client = server.CreateClient()
-
-    let! response =
-        client.GetAsync("/users")
+    let! response = client.GetAsync("/users")
+    
     Assert.Equal (HttpStatusCode.OK, response.StatusCode)
     let! content = response.Content.ReadAsStringAsync()
-    assertJsonEqual v2UsersJson content
-}
+    assertJsonEqual v2UsersJson content }
 
 [<Fact>]
 let ``can query users endpoint with v1``() = task {
     use client = server.CreateClient()
     client.DefaultRequestHeaders.Add ("x-version", "1")
     let! response = client.GetAsync("/users")
+    
     Assert.Equal (HttpStatusCode.OK, response.StatusCode)
     let! content = response.Content.ReadAsStringAsync()
-    assertJsonEqual v1UsersJson content
-}
+    assertJsonEqual v1UsersJson content }
 
 [<Fact>]
 let ``can query users endpoint with v2``() = task {
     use client = server.CreateClient()
     client.DefaultRequestHeaders.Add ("x-version", "2")
     let! response = client.GetAsync("/users")
+    
     Assert.Equal (HttpStatusCode.OK, response.StatusCode)
     let! content = response.Content.ReadAsStringAsync()
-    assertJsonEqual v2UsersJson content
-}
+    assertJsonEqual v2UsersJson content }

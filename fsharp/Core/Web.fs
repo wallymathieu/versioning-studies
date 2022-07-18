@@ -40,8 +40,7 @@ let webApp (userRepository:IUserRepository) =
     let! auctionList =  userRepository.GetUsers()
     let toJson = match version with | V1 -> V1.User.toJson | V2 -> V2.User.toJson
     let jArray = auctionList |> List.map toJson |> List.toArray |> JArray
-    return! json jArray next ctx
-  })
+    return! json jArray next ctx })
 
   choose [ 
     route "/" >=> (text "App")
