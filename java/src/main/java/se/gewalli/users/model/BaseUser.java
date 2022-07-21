@@ -9,5 +9,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
         @JsonSubTypes.Type(value = V2User.class, name = "V2User") }
 )
-public abstract class BaseUser {
+public interface BaseUser {
 }
