@@ -1,17 +1,17 @@
-name: C# CI with .NET cli
+name: F# CI with .NET cli
 
 on:
   push:
     branches: [ "main" ]
     paths:
-       - 'csharp/**'
+       - 'fsharp/**'
   pull_request:
     branches: [ "main" ]
     paths:
-       - 'csharp/**'
+       - 'fsharp/**'
 env:
    # Path to the solution file relative to the root of the project.
-   FILE_PATH: csharp
+   FILE_PATH: fsharp
    
 jobs:
   build:
