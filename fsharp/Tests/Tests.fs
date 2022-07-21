@@ -4,7 +4,9 @@ open Fleece
 open Fleece.FSharpData
 
 open Wallymathieu.VersioningStudies.Utils
-open Wallymathieu.VersioningStudies.JSON
+open Wallymathieu.VersioningStudies.Domain
+open Wallymathieu.VersioningStudies.Domain.JSON
+
 let v1UserJson = """{
   "id": 1,
   "email": "email@email.se",
@@ -32,11 +34,9 @@ let v2UserJson = """{
 let ``v2 format``() =
     assertJsonEqual v2UserJson (string (V2.User.toJson user1))
 
-let mixCodec = V2.UserData.codec <|> V1.UserData.codec |> ofObjCodec
-
 [<Fact>]
 let ``mix format v1 input``() =
-    let decoded = Codec.decode mixCodec (Encoding.Parse v1UserJson)
+    let decoded : UserData ParseResult = ofJsonText v1UserJson
     
     match decoded with 
     | Ok v->
@@ -49,7 +49,7 @@ let ``mix format v1 input``() =
 
 [<Fact>]
 let ``mix format v2 input``() =
-    let decoded = Codec.decode mixCodec (Encoding.Parse v2UserJson)
+    let decoded : UserData ParseResult = ofJsonText v2UserJson
     
     match decoded with 
     | Ok v->

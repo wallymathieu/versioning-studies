@@ -7,7 +7,7 @@ open Fleece
 
 open Wallymathieu.VersioningStudies.Giraffe.Json
 open Wallymathieu.VersioningStudies.Domain
-open Wallymathieu.VersioningStudies.JSON
+open Wallymathieu.VersioningStudies.Domain.JSON
 
 
 module Paths =

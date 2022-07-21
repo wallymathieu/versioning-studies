@@ -1,31 +1,28 @@
-﻿namespace Wallymathieu.VersioningStudies
+﻿namespace Wallymathieu.VersioningStudies.Domain
 open System.Threading.Tasks
 open FSharpPlus
 
-module Domain =
-    
-    type UserId = UserId of int32
-    with
-        static member unwrap (UserId id) = id
-    type UserRole = | Normal | Support | Administrator
-    type UserData = {
-        Email:      string
-        IsActive:   bool
-        FirstName:  string
-        LastName:   string
-        Roles:      UserRole list }
-    type User = {
-        Id:         UserId
-        Login:      string
-        Password:   string
-        Data:       UserData }
+type UserId = UserId of int32
+with
+    static member unwrap (UserId id) = id
+type UserRole = | Normal | Support | Administrator
+type UserData = {
+    Email:      string
+    IsActive:   bool
+    FirstName:  string
+    LastName:   string
+    Roles:      UserRole list }
+type User = {
+    Id:         UserId
+    Login:      string
+    Password:   string
+    Data:       UserData }
 
-    type IUserRepository = interface 
-        abstract member GetUsers : unit -> Task<User list>
-    end
+type IUserRepository = interface 
+    abstract member GetUsers : unit -> Task<User list>
+end
 
 module JSON =
-    open Domain
     open Fleece
     open Fleece.FSharpData
     open System
@@ -101,4 +98,7 @@ module JSON =
                        
                        yield! (Codec.encode UserData.codec data.Data).Properties
                        } |> Seq.toList)
+
+type UserData with
+    static member get_Codec () = JSON.V2.UserData.codec <|> JSON.V1.UserData.codec |> Fleece.Operators.ofObjCodec
 
