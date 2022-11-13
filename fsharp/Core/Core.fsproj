@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>Wallymathieu.VersioningStudies</RootNamespace>
   </PropertyGroup>
@@ -11,7 +11,7 @@
     <Compile Include="Giraffe.fs" />
     <Compile Include="Web.fs" />
     <PackageReference Include="FSharpPlus" Version="1.2.4" />
-    <PackageReference Include="Fleece.FSharpData" Version="0.10.0" />
+    <PackageReference Include="Fleece.FSharpData" Version="0.11.0-static-interfaces.1" />
     <PackageReference Include="Giraffe" Version="4.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
